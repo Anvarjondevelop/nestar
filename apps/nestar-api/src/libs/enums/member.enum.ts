@@ -1,5 +1,6 @@
 //to'g'ridan-to'g'ni bu enumlarni graphQL bilan ishlataolmaymiz
 //ishlatish uchun enumlarni ro'yhatga oladigan package kerak bo'ladi
+
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum MemberType {
@@ -8,6 +9,7 @@ export enum MemberType {
 	ADMIN = 'ADMIN',
 }
 registerEnumType(MemberType, {
+	//Men yozgan TypeScript enum ni GraphQL schema ichida ham ishlatmoqchiman
 	name: 'MemberType',
 });
 
