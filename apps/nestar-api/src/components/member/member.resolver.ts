@@ -17,19 +17,21 @@ export class MemberResolver {
 			//Args = Arguments //NestJS requestdan input ni olib, seni functioning ichidagi input o‘zgaruvchisiga joylayapti.
 			console.log('Mutation signup');
 			console.log('input', input);
-			return this.memberService.signup(input);
+			const result = await this.memberService.signup(input);
+			return result;
 		} catch (err) {
 			console.log('Error , Signup', err);
 			throw new InternalServerErrorException(err);
 		}
 	}
 
-	@Mutation(() => String)
+	@Mutation(() => Member)
 	@UsePipes(ValidationPipe)
 	public async login(@Args('input') input: LoginInput): Promise<Member> {
 		try {
 			console.log('Mutation login');
-			return this.memberService.login(input);
+			const result = await this.memberService.login(input);
+			return result;
 		} catch (err) {
 			console.log('Error , login', err);
 			throw new InternalServerErrorException(err);
