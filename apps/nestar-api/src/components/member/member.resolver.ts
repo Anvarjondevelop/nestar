@@ -12,29 +12,20 @@ export class MemberResolver {
 
 	@Mutation(() => Member)
 	public async signup(@Args('input') input: MemberInput): Promise<Member> {
-		try {
-			//Args = Arguments //NestJS requestdan input ni olib, seni functioning ichidagi input o‘zgaruvchisiga joylayapti.
-			console.log('Mutation signup');
-			console.log('input', input);
-			const result = await this.memberService.signup(input);
-			return result;
-		} catch (err) {
-			console.log('Error , Signup', err);
-			throw new InternalServerErrorException(err);
-		}
+		//Args = Arguments //NestJS requestdan input ni olib, seni functioning ichidagi input o‘zgaruvchisiga joylayapti.
+		console.log('Mutation signup');
+		console.log('input', input);
+		const result = await this.memberService.signup(input);
+		return result;
 	}
 
 	@Mutation(() => Member)
 	public async login(@Args('input') input: LoginInput): Promise<Member> {
-		try {
-			console.log('Mutation login');
-			const result = await this.memberService.login(input);
-			return result;
-		} catch (err) {
-			console.log('Error , login', err);
-			throw new InternalServerErrorException(err);
-		}
+		console.log('Mutation login');
+		const result = await this.memberService.login(input);
+		return result;
 	}
+
 	@Mutation(() => String)
 	public async updateMember(): Promise<string> {
 		console.log('Mutation updateMember');
