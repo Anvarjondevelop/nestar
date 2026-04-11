@@ -1,6 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { IsNotEmpty, IsOptional, Length } from 'class-validator';
-import { MemberAuthType } from '../../enums/member.enum';
+import { MemberAuthType, MemberType } from '../../enums/member.enum';
 
 @InputType()
 export class MemberInput {
@@ -21,6 +21,10 @@ export class MemberInput {
 	@IsOptional()
 	@Field(() => MemberAuthType, { nullable: true }) //bo'sh bo'lishi mumkin
 	memberAuthType?: MemberAuthType;
+
+	@IsOptional()
+	@Field(() => MemberType, { nullable: true }) //bo'sh bo'lishi mumkin
+	memberType?: MemberType;
 }
 
 @InputType()
