@@ -2,6 +2,10 @@ import {  Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { MemberService } from './member.service';
 import { LoginInput, MemberInput } from '../../libs/dto/member/member.input';
 import { Member } from '../../libs/dto/member/member';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from '../auth/guards/auth.guard';
+import { AuthMember } from '../auth/decorators/authMember.decorator';
+import { ObjectId } from 'bson';
 
 @Resolver()
 export class MemberResolver {
@@ -26,11 +30,24 @@ export class MemberResolver {
 
 
 //Authentication
+  @UseGuards(AuthGuard)
 	@Mutation(() => String)
-	public async updateMember(): Promise<string> {
+	//authenticate bo'lgan memberni ma'lumotini olish uchun createParam decorator yozish kerak bo'ldi
+	public async updateMember(@AuthMember("_id") Id: ObjectId): Promise<string> {
 		console.log('Mutation updateMember');
+		console.log('Id', Id);
 		return this.memberService.updateMember();
 	}
+
+  @UseGuards(AuthGuard)
+	@Query(() => String)
+	//authenticate bo'lgan memberni ma'lumotini olish uchun createParam decorator yozish kerak bo'ldi
+	public async checkAuth(@AuthMember("memberNick") memberNick: string): Promise<string> {
+		console.log('Query checkAuth');
+		console.log('memberNick', memberNick);
+		return `Hi ${memberNick}, you are authenticated!`;
+	}
+
 	@Query(() => String)
 	public async getMember(): Promise<string> {
 		console.log('Mutation getMember');

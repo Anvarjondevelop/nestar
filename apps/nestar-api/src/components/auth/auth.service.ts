@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { Member } from '../../libs/dto/member/member';
 import { T } from '../../libs/types/common';
+import { shapeIntoMongoObjectId } from '../../libs/config';
 
 @Injectable()
 export class AuthService {
@@ -27,10 +28,12 @@ export class AuthService {
 
 		return await this.jwtService.signAsync(payload);
 	}
-
+//decode qilib beradi, tekshiradi
 	public async verifyToken(token: string): Promise<Member> {
 		const member = await this.jwtService.verifyAsync(token);
 
+//JWT string beradi → MongoDB ObjectId kutadi → convert qilish kerak
+		member._id = shapeIntoMongoObjectId(member._id);
 		return member;
 	}
 }
