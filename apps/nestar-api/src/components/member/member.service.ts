@@ -9,12 +9,16 @@ import { AuthService } from '../auth/auth.service';
 import { MemberUpdate } from '../../libs/dto/member/member.update';
 import { ObjectId } from 'bson';
 import { T } from '../../libs/types/common';
+import { ViewService } from '../view/view.service';
+import { ViewGroup } from '../../libs/enums/view.enum';
+import { ViewInput } from '../../libs/dto/view/view.input';
 
 @Injectable()
 export class MemberService {
 	constructor(
 		@InjectModel('Member') private readonly memberModel: Model<Member>,
 		private authService: AuthService, //inctance olinyapdi
+		private viewService: ViewService,
 	) {}
 	//“NestJS, menga MongoDB’dagi Member modelni ber, men uni memberModel nomi bilan ishlataman”
 
@@ -64,16 +68,28 @@ export class MemberService {
 		return result;
 	}
 
-	public async getMember(targetId: ObjectId): Promise<Member> {
+	public async getMember(memberId: ObjectId, targetId: ObjectId): Promise<Member> {
 		const search: T = {
 			_id: targetId,
 			memberStatus: {
 				$in: [MemberStatus.ACTIVE, MemberStatus.BLOCK],
 			},
 		};
-		const tergetMember = await this.memberModel.findOne(search).exec();
-		if (!tergetMember) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-		return tergetMember;
+		const targetMember = await this.memberModel.findOne(search).lean().exec();
+		if (!targetMember) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+
+		if (memberId) {
+			const viewInput = { memberId: memberId, viewRefId: targetId, viewGroup: ViewGroup.MEMBER };
+			const newView = await this.viewService.recordView(viewInput);
+			if (newView) {
+				await this.memberModel.findOneAndUpdate(search, { $inc: { memberViewCount: 1 } }, { new: true }).exec();
+				targetMember.memberViews++;
+			}
+
+			// increese view count
+		}
+
+		return targetMember;
 	}
 
 	/** ADMIN **/
