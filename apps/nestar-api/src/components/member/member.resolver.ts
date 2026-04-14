@@ -1,4 +1,4 @@
-import {  Resolver, Query, Args, Mutation } from '@nestjs/graphql';
+import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { MemberService } from './member.service';
 import { LoginInput, MemberInput } from '../../libs/dto/member/member.input';
 import { Member } from '../../libs/dto/member/member';
@@ -9,6 +9,7 @@ import { ObjectId } from 'bson';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { MemberType } from '../../libs/enums/member.enum';
 import { RolesGuard } from '../auth/guards/roles.guard';
+import { MemberUpdate } from '../../libs/dto/member/member.update';
 
 @Resolver()
 export class MemberResolver {
@@ -31,21 +32,24 @@ export class MemberResolver {
 		return this.memberService.login(input);
 	}
 
-
-//Authentication
-  @UseGuards(AuthGuard)
-	@Mutation(() => String)
+	//Authentication
+	@UseGuards(AuthGuard)
+	@Mutation(() => Member)
 	//authenticate bo'lgan memberni ma'lumotini olish uchun createParam decorator yozish kerak bo'ldi
-	public async updateMember(@AuthMember("_id") Id: ObjectId): Promise<string> {
+	public async updateMember(
+		@Args('input') input: MemberUpdate,
+		@AuthMember('_id') memberId: ObjectId,
+	): Promise<Member> {
 		console.log('Mutation updateMember');
-		console.log('Id', Id);
-		return this.memberService.updateMember();
+		console.log('memberId', memberId);
+
+		return this.memberService.updateMember(memberId, input);
 	}
 
-  @UseGuards(AuthGuard)
+	@UseGuards(AuthGuard)
 	@Query(() => String)
 	//authenticate bo'lgan memberni ma'lumotini olish uchun createParam decorator yozish kerak bo'ldi
-	public async checkAuth(@AuthMember("memberNick") memberNick: string): Promise<string> {
+	public async checkAuth(@AuthMember('memberNick') memberNick: string): Promise<string> {
 		console.log('Query checkAuth');
 		console.log('memberNick', memberNick);
 		return `Hi ${memberNick}, you are authenticated!`;
@@ -69,17 +73,17 @@ export class MemberResolver {
 	/** ADMIN **/
 
 	//Authorization: ADMIN
-@Roles(MemberType.ADMIN)
-@UseGuards(RolesGuard)
-@Mutation(() => String)
-public async getAllMembersByAdmin(): Promise<string> {
-	return this.memberService.getAllMembersByAdmin();
-}
+	@Roles(MemberType.ADMIN)
+	@UseGuards(RolesGuard)
+	@Mutation(() => String)
+	public async getAllMembersByAdmin(): Promise<string> {
+		return this.memberService.getAllMembersByAdmin();
+	}
 
 	//Authorization: ADMIN
-@Mutation(() => String)
-public async updateMemberByAdmin(): Promise<string> {
-	console.log('Mutation updateMemberByAdmin');
-	return this.memberService.updateMemberByAdmin();
-}
+	@Mutation(() => String)
+	public async updateMemberByAdmin(): Promise<string> {
+		console.log('Mutation updateMemberByAdmin');
+		return this.memberService.updateMemberByAdmin();
+	}
 }

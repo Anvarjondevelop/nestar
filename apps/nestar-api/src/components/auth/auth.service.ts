@@ -17,6 +17,7 @@ export class AuthService {
 		return await bcrypt.compare(password, hashedPassword);
 	}
 
+	//Tokenni hosil qilib beradi, payloadni ichiga memberning ma'lumotlarini joylaydi, lekin passwordni tashlab ketadi
 	public async createToken(member: Member): Promise<string> {
 		console.log('member', member);
 		const payload: T = {};
@@ -28,6 +29,7 @@ export class AuthService {
 
 		return await this.jwtService.signAsync(payload);
 	}
+
 //decode qilib beradi, tekshiradi
 	public async verifyToken(token: string): Promise<Member> {
 		const member = await this.jwtService.verifyAsync(token);
