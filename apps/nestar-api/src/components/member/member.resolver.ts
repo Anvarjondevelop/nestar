@@ -110,9 +110,9 @@ export class MemberResolver {
 	@UseGuards(AuthGuard)
 	@Mutation((returns) => String)
 	public async imageUploader(
-		@Args({ name: 'file', type: () => GraphQLUpload })
+		@Args({ name: 'file', type: () => GraphQLUpload }) //file nomi ostida image kirib keladi, va bu file ni GraphQLUpload turida qabul qilamiz, chunki bu file upload qilish uchun maxsus tur
 		{ createReadStream, filename, mimetype }: FileUpload,
-		@Args('target') target: String,
+		@Args('target') target: String, // serverga yuboradigan imgni qaysi papkaga joylashtirish kerakligini bildiradi (member, property, article)
 	): Promise<string> {
 		console.log('Mutation: imageUploader');
 
@@ -139,7 +139,7 @@ export class MemberResolver {
 	@Mutation((returns) => [String])
 	public async imagesUploader(
 		@Args('files', { type: () => [GraphQLUpload] })
-		files: Promise<FileUpload>[],
+		files: Promise<FileUpload>[], // destruction qilyapmiz FileUpload ichidan ajratib olyapmiz
 		@Args('target') target: String,
 	): Promise<string[]> {
 		console.log('Mutation: imagesUploader');
