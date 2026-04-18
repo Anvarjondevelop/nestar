@@ -2,7 +2,12 @@ import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { MemberService } from './member.service';
 import { AgentsInquiry, LoginInput, MemberInput, MembersInquiry } from '../../libs/dto/member/member.input';
 import { Member, Members } from '../../libs/dto/member/member';
-import { UseGuards } from '@nestjs/common';
+import {
+	BadRequestException,
+	InternalServerErrorException,
+	UnsupportedMediaTypeException,
+	UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { AuthMember } from '../auth/decorators/authMember.decorator';
 import { ObjectId } from 'bson';
@@ -116,9 +121,9 @@ export class MemberResolver {
 	): Promise<string> {
 		console.log('Mutation: imageUploader');
 
-		if (!filename) throw new Error(Message.UPLOAD_FAILED);
+		if (!filename) throw new BadRequestException(Message.UPLOAD_FAILED);
 		const validMime = validMimeTypes.includes(mimetype);
-		if (!validMime) throw new Error(Message.PROVIDE_ALLOWED_FORMAT);
+		if (!validMime) throw new UnsupportedMediaTypeException(Message.PROVIDE_ALLOWED_FORMAT);
 
 		const imageName = getSerialForImage(filename);
 		const url = `uploads/${target}/${imageName}`;
@@ -130,7 +135,7 @@ export class MemberResolver {
 				.on('finish', async () => resolve(true))
 				.on('error', () => reject(false));
 		});
-		if (!result) throw new Error(Message.UPLOAD_FAILED);
+		if (!result) throw new InternalServerErrorException(Message.UPLOAD_FAILED);
 
 		return url;
 	}
@@ -162,7 +167,7 @@ export class MemberResolver {
 						.on('finish', () => resolve(true))
 						.on('error', () => reject(false));
 				});
-				if (!result) throw new Error(Message.UPLOAD_FAILED);
+				if (!result) throw new InternalServerErrorException(Message.UPLOAD_FAILED);
 
 				uploadedImages[index] = url;
 			} catch (err) {

@@ -68,7 +68,7 @@ export class MemberService {
 		return result;
 	}
 
-	public async getMember(memberId: ObjectId, targetId: ObjectId): Promise<Member> {
+	public async getMember(memberId: ObjectId | null, targetId: ObjectId): Promise<Member> {
 		const search: T = {
 			_id: targetId,
 			memberStatus: {
@@ -181,3 +181,6 @@ export class MemberService {
 		return await this.memberModel.findOneAndUpdate(_id, { $inc: { [targetKey]: modifier } }, { new: true }).exec();
 	}
 }
+//$facet — bir xil ma’lumot ustida bir vaqtning o‘zida bir nechta alohida hisob-kitob qilish uchun ishlatiladi.
+//Bitta oqim bilan kelayotgan datani bir nechta yo‘lga bo‘lib, har bir yo‘lda alohida ish bajaradi.
+//bitta aggregation ichida bir nechta alohida natijani parallel olish
