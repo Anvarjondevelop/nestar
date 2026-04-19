@@ -26,6 +26,7 @@ export class PropertyResolver {
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<Property> {
 		console.log('Mutation: createProperty');
+		input.memberId = memberId;
 		return await this.propertyService.createProperty(input);
 	}
 
@@ -36,8 +37,10 @@ export class PropertyResolver {
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<Property> {
 		console.log('Query: getProperty');
+		console.log('input', input);
 		const propertyId = shapeIntoMongoObjectId(input);
-		return await this.propertyService.getProperty(propertyId, memberId);
+		console.log('1');
+		return await this.propertyService.getProperty(memberId, propertyId);
 	}
 
 	@Roles(MemberType.AGENT)
@@ -50,5 +53,15 @@ export class PropertyResolver {
 		console.log('Mutation: updateProperty');
 		const propertyId = shapeIntoMongoObjectId(input._id);
 		return await this.propertyService.updateProperty(memberId, input);
+	}
+
+	@UseGuards(WithoutGuard)
+	@Query((returns) => Properties)
+	public async getPropreties(
+		@Args('input') input: PropertiesInquiry,
+		@AuthMember('_id') memberId: ObjectId,
+	): Promise<Properties> {
+		console.log('Query : getProperties');
+		return await this.propertyService.getProperties(memberId, input);
 	}
 }
