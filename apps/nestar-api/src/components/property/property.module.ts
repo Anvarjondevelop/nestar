@@ -9,7 +9,7 @@ import { MemberModule } from '../member/member.module';
 
 @Module({
 	imports: [
-		MongooseModule.forFeature([{ name: 'Property', schema: PropertySchema }]),
+		MongooseModule.forFeature([{ name: 'Property', schema: PropertySchema }]), //bu modelni DI container ichiga joylaydi
 		AuthModule,
 		ViewModule,
 		MemberModule,

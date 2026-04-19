@@ -28,6 +28,7 @@ export const shapeIntoMongoObjectId = (target: any) => {
 
 export const lookupMember = {
 	$lookup: {
+		//boshqa collection bilan bog‘lash
 		from: 'members',
 		localField: 'memberId',
 		foreignField: '_id',

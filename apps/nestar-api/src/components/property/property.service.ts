@@ -223,13 +223,14 @@ export class PropertyService {
 				{ $sort: sort },
 				{
 					$facet: {
+						//demak facet filter bo'lib kelgan datani aynan o'sha datatni o'zini turli xil yo'llarda qayta ishlatishi mumkin agar oddiy qilsak shunchaki ketma ket filter chiqrib beraveradi facet esa filterlangan dattni olib xohlagangancha aynan o'sha datani qayta ishlashi mumkin
 						list: [
 							{ $skip: (input.page - 1) * input.limit },
 							{ $limit: input.limit },
-							lookupMember,
-							{ $unwind: '$memberData' },
+							lookupMember, // har bit propertyni yaratgan memberni ham olib keladi va memberData keyi ostida saqlaydi
+							{ $unwind: '$memberData' }, //Bitta propertyga tegishli memberni arraydan chiqarib, oddiy object ko‘rinishga keltir.
 						],
-						metaCounter: [{ $count: 'total' }],
+						metaCounter: [{ $count: 'total' }], //Filterdan o‘tgan jami nechta property borligini sanab ber.
 					},
 				},
 			])
