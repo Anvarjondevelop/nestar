@@ -180,7 +180,7 @@ export class MemberService {
 	public async memberStatsEditor(input: StatisticModifier): Promise<Member | null> {
 		console.log('executed memberStatsEditor with input: ');
 		const { _id, targetKey, modifier } = input;
-		return await this.memberModel.findOneAndUpdate(_id, { $inc: { [targetKey]: modifier } }, { new: true }).exec();
+		return await this.memberModel.findByIdAndUpdate(_id, { $inc: { [targetKey]: modifier } }, { new: true }).exec();
 	}
 }
 //$facet — bir xil ma’lumot ustida bir vaqtning o‘zida bir nechta alohida hisob-kitob qilish uchun ishlatiladi.
