@@ -31,13 +31,14 @@ export class BoardArticleResolver {
 	}
 	//----------------getBoardArticle------------------
 	@UseGuards(WithoutGuard)
-	@Mutation((returns) => BoardArticle)
+	@Query((returns) => BoardArticle)
 	public async getBoardArticle(
 		@Args('articleId') input: string,
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<BoardArticle> {
 		console.log('Mutation:getBoardArticle ');
 		const articleId = shapeIntoMongoObjectId(input);
+		console.log('articleId type:', typeof articleId);
 		return await this.boardArticleService.getBoardArticle(memberId, articleId);
 	}
 	//----------------updateBoardArticle------------------
