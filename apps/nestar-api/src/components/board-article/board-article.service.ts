@@ -49,7 +49,7 @@ export class BoardArticleService {
 			articleStatus: BoardArticleStatus.ACTIVE,
 		};
 
-		const targetBoardArticle: BoardArticle | null = await this.boardArticleModel.findOne(search).exec();
+		const targetBoardArticle: BoardArticle | null = await this.boardArticleModel.findOne(search).lean().exec();
 		console.log('targetBoardArticle:1 ', targetBoardArticle);
 		if (!targetBoardArticle) throw new BadRequestException(Message.NO_DATA_FOUND);
 
