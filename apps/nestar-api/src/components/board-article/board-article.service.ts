@@ -43,12 +43,14 @@ export class BoardArticleService {
 	}
 
 	//------Get Board Article------
-	public async getBoardArticle(memberId: Types.ObjectId, articleId: Types.ObjectId): Promise<BoardArticle> {
+	public async getBoardArticle(memberId: ObjectId, articleId: ObjectId): Promise<BoardArticle> {
 		const search: T = {
 			_id: articleId,
 			articleStatus: BoardArticleStatus.ACTIVE,
 		};
-		const targetBoardArticle: BoardArticle | null = await this.boardArticleModel.findOne(search).lean().exec();
+
+		const targetBoardArticle: BoardArticle | null = await this.boardArticleModel.findOne(search).exec();
+		console.log('targetBoardArticle:1 ', targetBoardArticle);
 		if (!targetBoardArticle) throw new BadRequestException(Message.NO_DATA_FOUND);
 
 		if (memberId) {
@@ -60,6 +62,7 @@ export class BoardArticleService {
 			}
 			//meLiked
 		}
+		console.log('targetBoardArticle:2 ', targetBoardArticle);
 		//frontedga muallif malumotlarini jo'natish uchun yozyapmiz
 		targetBoardArticle.memberData = await this.memberService.getMember(null, targetBoardArticle.memberId);
 		//“Menga shu article egasini topib ber, lekin viewer bilan bog‘liq qo‘shimcha logiclarni ishlatma.”
