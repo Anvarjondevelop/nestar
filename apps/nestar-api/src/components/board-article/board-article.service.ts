@@ -65,6 +65,8 @@ export class BoardArticleService {
 				targetBoardArticle.articleViews++;
 			}
 			//meLiked
+			const likeInput: LikeInput = { memberId: memberId, likeRefId: articleId, likeGroup: LikeGroup.ARTICLE };
+			targetBoardArticle.meLiked = await this.likeService.checkLikeExistence(likeInput);
 		}
 		console.log('targetBoardArticle:2 ', targetBoardArticle);
 		//frontedga muallif malumotlarini jo'natish uchun yozyapmiz

@@ -11,7 +11,7 @@ export class MeLiked {
 	likeRefId: ObjectId;
 
 	@Field(() => Boolean)
-	myFavorite: boolean;
+	myFavorite?: boolean;
 }
 
 @ObjectType()
