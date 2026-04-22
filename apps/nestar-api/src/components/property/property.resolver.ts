@@ -17,6 +17,7 @@ import { WithoutGuard } from '../auth/guards/without.guard';
 import { shapeIntoMongoObjectId } from '../../libs/config';
 import { PropertyUpdate } from '../../libs/dto/property/property.update';
 import { Agent } from 'http';
+import { AuthGuard } from '../auth/guards/auth.guard';
 //propertyInputni frontenddan backenga argument sifatida pass qilamiz
 //property esa backenddan frontendga response sifatida qaytadi
 
@@ -80,6 +81,16 @@ export class PropertyResolver {
 	): Promise<Properties> {
 		console.log('Query : getMyProperties');
 		return await this.propertyService.getAgentProperties(memberId, input);
+	}
+	@UseGuards(AuthGuard)
+	@Mutation(() => Property)
+	public async likeTargetProperty(
+		@Args('propertyId') input: string,
+		@AuthMember('_id') memberId: ObjectId,
+	): Promise<Property> {
+		console.log('Mutation likeTargetMember');
+		const likeRefId = shapeIntoMongoObjectId(input);
+		return await this.propertyService.likeTargetProperty(memberId, likeRefId);
 	}
 
 	/* ADMIN */
