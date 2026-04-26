@@ -134,6 +134,15 @@ export const lookupFavorite = {
 		as: 'favoriteProperty.memberData',
 	},
 };
+
+export const lookupVisit = {
+	$lookup: {
+		from: 'members',
+		localField: 'visitedProperty.memberId',
+		foreignField: '_id',
+		as: 'visitedProperty.memberData',
+	},
+};
 /* POSTMAN
   imageUploader
   operations: { "query": "mutation ImageUploader($file: Upload!, $target: String!) { imageUploader(file: $file, target: $target) }", "variables": { "file": null, "target": "member" }}
