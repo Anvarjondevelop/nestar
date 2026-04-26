@@ -126,6 +126,14 @@ export const lookupFollowerData = {
 	},
 };
 
+export const lookupFavorite = {
+	$lookup: {
+		from: 'members',
+		localField: 'favoriteProperty.memberId',
+		foreignField: '_id',
+		as: 'favoriteProperty.memberData',
+	},
+};
 /* POSTMAN
   imageUploader
   operations: { "query": "mutation ImageUploader($file: Upload!, $target: String!) { imageUploader(file: $file, target: $target) }", "variables": { "file": null, "target": "member" }}
