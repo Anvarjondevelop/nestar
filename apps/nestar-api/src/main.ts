@@ -4,12 +4,14 @@ import { ValidationPipe } from '@nestjs/common';
 import { LoggingInterceptor } from './libs/interceptor/Logging.interceptor';
 import { graphqlUploadExpress } from 'graphql-upload';
 import * as express from 'express';
+import { WsAdapter } from '@nestjs/platform-ws';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
 	app.useGlobalInterceptors(new LoggingInterceptor());
 	app.useGlobalPipes(new ValidationPipe());
 	app.enableCors({ origin: true, credentials: true });
+	app.useWebSocketAdapter(new WsAdapter(app));
 
 	app.use(graphqlUploadExpress({ maxFileSize: 15000000, maxFiles: 10 })); //15mb gacha fayllarni qabul qilish uchun
 	app.use('/uploads', express.static('uploads')); //uploads papkasini statik qilish
